@@ -29,6 +29,8 @@ export class MainScene extends Palco2D.Scene {
   async start() {
     const tileSetImage = await Palco2D.AssetHandler().loadPng("tileset", "assets/dungeon-tileset.png");
     const tileMap = await Palco2D.AssetHandler().loadTileMap("tilemap", "assets/tile-map.json");
+    const snakeImage = await Palco2D.AssetHandler().loadPng("snake", "assets/snake-tileset.png");
+    const snakeTimeMap = await Palco2D.AssetHandler().loadTileMap("snake-tilemap", "assets/snake-tilemap.json");
 
     const rows = 30;
     const cols = 30;
@@ -53,6 +55,18 @@ export class MainScene extends Palco2D.Scene {
       cols
     });
 
+
+    const snake = new Palco2D.Sprite({
+      texture: snakeImage,
+      tileMap: snakeTimeMap,
+      position: { x: 200, y: 100 },
+      rotation: 0,
+      layer: 1
+    });
+
+    snake.setTile("head");
+
+    this.render.addEntity(snake);
     this.render.addEntity(floor);
     this.render.startRender();
   }

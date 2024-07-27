@@ -1,0 +1,40 @@
+  {
+    "name": "snake-tile-map",
+    "size": {
+      "width": 32,
+      "height": 32
+    },
+    "map": {
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 16,
+        "height": 16
+      },
+      "body-turn": {
+        "x": 16,
+        "y": 0,
+        "width": 16,
+        "height": 16
+      },
+      "head": {
+        "x": 0,
+        "y": 16,
+        "width": 16,
+        "height": 16
+      },
+      "head-eating": {
+        "x": 16,
+        "y": 16,
+        "width": 16,
+        "height": 16
+      },
+      "tail": {
+        "x": 32,
+        "y": 0,
+        "width": 16,
+        "height": 16
+      }
+    },
+    "sequence": []
+  }
