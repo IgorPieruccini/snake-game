@@ -79,9 +79,13 @@ export class Snake extends Palco2D.BaseEntity {
 
 
   private updateHead(direction: Direction) {
+
     for (let i = this.snakeBody.length - 1; i >= 1; i--) {
       this.updateBodyParts(this.snakeBody[i]);
     }
+
+    const tail = this.snakeBody[this.snakeBody.length - 1];
+    this.updateBodyParts(tail, true);
 
     const head = this.snakeBody[0];
     head.direction = direction;
@@ -100,17 +104,56 @@ export class Snake extends Palco2D.BaseEntity {
         break;
     }
 
-    this.updateBodyParts(head);
+    head.sprite.position = { x: this.cellSize * head.x, y: this.cellSize * head.y };
+    head.sprite.rotation = this.getRotateDirection(head.direction);
 
+    for (let i = this.snakeBody.length - 1; i >= 1; i--) {
+      this.updateBodyPartsTile(this.snakeBody[i]);
+    }
   }
 
-  private updateBodyParts(snakePart: SnakeBodyType) {
+  private updateBodyPartsTile(snakePart: SnakeBodyType) {
+    if (!snakePart.prev) return;
+    const nextPartDirection = snakePart.prev.direction;
+    const direction = snakePart.direction;
 
-    if (snakePart.prev) {
+    if (snakePart.key === BodyType.body) {
+      if (nextPartDirection !== direction) {
+        snakePart.sprite.setTile("body-turn");
+
+        if (nextPartDirection === Direction.down && direction === Direction.left) {
+          snakePart.sprite.rotation = -90;
+        }
+
+        if (nextPartDirection === Direction.down && direction === Direction.right) {
+          snakePart.sprite.rotation = 0;
+        }
+
+        if (nextPartDirection === Direction.right && direction === Direction.up) {
+          snakePart.sprite.rotation = 270;
+        }
+
+        if (nextPartDirection === Direction.left && direction === Direction.down) {
+          snakePart.sprite.rotation = 90;
+        }
+
+        if (nextPartDirection === Direction.up && direction === Direction.left) {
+          snakePart.sprite.rotation = 180;
+        }
+      } else {
+        snakePart.sprite.setTile("body");
+      }
+    }
+  }
+
+  private updateBodyParts(snakePart: SnakeBodyType, isTail: boolean = false) {
+    if (!snakePart.prev) return;
+
+    if (!isTail) {
       snakePart.x = snakePart.prev.x;
       snakePart.y = snakePart.prev.y;
-      snakePart.direction = snakePart.prev.direction;
     }
+    snakePart.direction = snakePart.prev.direction;
 
     snakePart.sprite.position = { x: this.cellSize * snakePart.x, y: this.cellSize * snakePart.y };
     snakePart.sprite.rotation = this.getRotateDirection(snakePart.direction);
@@ -128,7 +171,7 @@ export class Snake extends Palco2D.BaseEntity {
 
     this.snakeBody.push({
       prev: this.snakeBody[this.snakeBody.length - 1],
-      direction: Direction.down,
+      direction: Direction.up,
       x,
       y,
       key,
@@ -140,7 +183,9 @@ export class Snake extends Palco2D.BaseEntity {
 
   public spawnSnakeAt(x: number, y: number) {
     this.createSnakePart(x, y, BodyType.head);
-    this.createSnakePart(x, y - 1, BodyType.body);
-    this.createSnakePart(x, y - 2, BodyType.tail);
+    this.createSnakePart(x, y + 1, BodyType.body);
+    this.createSnakePart(x, y + 1, BodyType.body);
+    this.createSnakePart(x, y + 1, BodyType.body);
+    this.createSnakePart(x, y + 2, BodyType.tail);
   }
 }
