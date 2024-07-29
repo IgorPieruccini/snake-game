@@ -1,5 +1,5 @@
 import { Palco2D } from "palco-2d";
-import { BaseEntityProps, TileMapType } from "palco-2d/types";
+import { BaseEntityProps, TileMapType, Vec2 } from "palco-2d/types";
 
 type Props = BaseEntityProps & {
   tileMap: TileMapType;
@@ -21,13 +21,19 @@ enum Direction {
 }
 
 type SnakeBodyType = {
-  prev: SnakeBodyType | null;
-  x: number;
-  y: number;
-  direction: Direction;
+  position: Vec2;
+  direction: Vec2;
   key: BodyType;
   sprite: InstanceType<typeof Palco2D.Sprite>;
 };
+
+function getRotationDirection(direction: Vec2) {
+  if (direction.x === 0 && direction.y === -1) return 0;
+  if (direction.x === 0 && direction.y === 1) return 180;
+  if (direction.x === -1 && direction.y === 0) return 270;
+  if (direction.x === 1 && direction.y === 0) return 90;
+  return 0;
+}
 
 export class Snake extends Palco2D.BaseEntity {
   tileMap: TileMapType;
@@ -45,120 +51,54 @@ export class Snake extends Palco2D.BaseEntity {
     this.keyBoardEvents();
   }
 
-  private getRotateDirection(direction: Direction) {
-    switch (direction) {
-      case Direction.up:
-        return 0;
-      case Direction.down:
-        return 180;
-      case Direction.left:
-        return 270;
-      case Direction.right:
-        return 90;
-    }
-  }
-
   private keyBoardEvents() {
     document.addEventListener("keydown", (event) => {
       switch (event.key) {
         case "ArrowUp":
-          this.updateHead(Direction.up);
+          this.updateSnakePosition({ x: 0, y: -1 }, 0);
           break;
         case "ArrowDown":
-          this.updateHead(Direction.down);
+          this.updateSnakePosition({ x: 0, y: 1 }, 0);
           break;
         case "ArrowLeft":
-          this.updateHead(Direction.left);
+          this.updateSnakePosition({ x: -1, y: 0 }, 0);
           break;
         case "ArrowRight":
-          this.updateHead(Direction.right);
+          this.updateSnakePosition({ x: 1, y: 0 }, 0);
+          break;
+        case "a":
           break;
       }
     });
   }
 
+  private updateSnakePosition(direction: Vec2, index: number, oldPrevDirection?: Vec2) {
+    const body = this.snakeBody[index];
+    if (!body) return;
 
-  private updateHead(direction: Direction) {
+    const oldDirection = { x: body.direction.x, y: body.direction.y };
 
-    for (let i = this.snakeBody.length - 1; i >= 1; i--) {
-      this.updateBodyParts(this.snakeBody[i]);
-    }
+    body.position = { x: body.position.x + direction.x, y: body.position.y + direction.y };
+    body.direction = direction;
+    body.sprite.rotation = getRotationDirection(direction);
+    body.sprite.position = { x: body.position.x * this.cellSize, y: body.position.y * this.cellSize };
 
-    const tail = this.snakeBody[this.snakeBody.length - 1];
-    this.updateBodyParts(tail, true);
+    if (oldPrevDirection) {
+      const differentDirection = oldPrevDirection.x !== body.direction.x || oldPrevDirection.y !== body.direction.y;
 
-    const head = this.snakeBody[0];
-    head.direction = direction;
-    switch (direction) {
-      case Direction.up:
-        head.y -= 1;
-        break;
-      case Direction.down:
-        head.y += 1;
-        break;
-      case Direction.left:
-        head.x -= 1;
-        break;
-      case Direction.right:
-        head.x += 1;
-        break;
-    }
-
-    head.sprite.position = { x: this.cellSize * head.x, y: this.cellSize * head.y };
-    head.sprite.rotation = this.getRotateDirection(head.direction);
-
-    for (let i = this.snakeBody.length - 1; i >= 1; i--) {
-      this.updateBodyPartsTile(this.snakeBody[i]);
-    }
-  }
-
-  private updateBodyPartsTile(snakePart: SnakeBodyType) {
-    if (!snakePart.prev) return;
-    const nextPartDirection = snakePart.prev.direction;
-    const direction = snakePart.direction;
-
-    if (snakePart.key === BodyType.body) {
-      if (nextPartDirection !== direction) {
-        snakePart.sprite.setTile("body-turn");
-
-        if (nextPartDirection === Direction.down && direction === Direction.left) {
-          snakePart.sprite.rotation = -90;
-        }
-
-        if (nextPartDirection === Direction.down && direction === Direction.right) {
-          snakePart.sprite.rotation = 0;
-        }
-
-        if (nextPartDirection === Direction.right && direction === Direction.up) {
-          snakePart.sprite.rotation = 270;
-        }
-
-        if (nextPartDirection === Direction.left && direction === Direction.down) {
-          snakePart.sprite.rotation = 90;
-        }
-
-        if (nextPartDirection === Direction.up && direction === Direction.left) {
-          snakePart.sprite.rotation = 180;
-        }
-      } else {
-        snakePart.sprite.setTile("body");
+      if (differentDirection && body.key === BodyType.body) {
+        body.sprite.setTile("body-turn");
+      } else if (body.key === BodyType.body) {
+        body.sprite.setTile("body");
       }
     }
+
+    this.updateSnakePosition(oldDirection, index + 1, direction);
   }
 
-  private updateBodyParts(snakePart: SnakeBodyType, isTail: boolean = false) {
-    if (!snakePart.prev) return;
-
-    if (!isTail) {
-      snakePart.x = snakePart.prev.x;
-      snakePart.y = snakePart.prev.y;
-    }
-    snakePart.direction = snakePart.prev.direction;
-
-    snakePart.sprite.position = { x: this.cellSize * snakePart.x, y: this.cellSize * snakePart.y };
-    snakePart.sprite.rotation = this.getRotateDirection(snakePart.direction);
-  }
-
+  /**
+    * Create the sprite and objects for the snake part and push it to the snakeBody array
+    */
   private createSnakePart(x: number, y: number, key: BodyType) {
     const snakePart = new Palco2D.Sprite({
       texture: this.tileSetImage,
@@ -170,10 +110,8 @@ export class Snake extends Palco2D.BaseEntity {
     snakePart.setTile(key);
 
     this.snakeBody.push({
-      prev: this.snakeBody[this.snakeBody.length - 1],
-      direction: Direction.up,
-      x,
-      y,
+      direction: { x: 0, y: -1 },
+      position: { x, y },
       key,
       sprite: snakePart,
     });
@@ -181,11 +119,13 @@ export class Snake extends Palco2D.BaseEntity {
     this.addChild(snakePart);
   }
 
+  /**
+    * Spawn the default/initial snake at the given position
+    */
   public spawnSnakeAt(x: number, y: number) {
     this.createSnakePart(x, y, BodyType.head);
     this.createSnakePart(x, y + 1, BodyType.body);
-    this.createSnakePart(x, y + 1, BodyType.body);
-    this.createSnakePart(x, y + 1, BodyType.body);
-    this.createSnakePart(x, y + 2, BodyType.tail);
+    this.createSnakePart(x, y + 2, BodyType.body);
+    this.createSnakePart(x, y + 3, BodyType.tail);
   }
 }
