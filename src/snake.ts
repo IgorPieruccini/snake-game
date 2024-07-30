@@ -88,6 +88,16 @@ export class Snake extends Palco2D.BaseEntity {
 
       if (differentDirection && body.key === BodyType.body) {
         body.sprite.setTile("body-turn");
+        if (
+          (oldPrevDirection.x === 1 && body.direction.y === 1) ||
+          (oldPrevDirection.y === 1 && body.direction.x === -1) ||
+          (oldPrevDirection.x === -1 && body.direction.y === -1) ||
+          (oldPrevDirection.y === -1 && body.direction.x === 1)
+        ) {
+          body.sprite.size.x = Math.abs(body.sprite.size.x)
+        } else {
+          body.sprite.size.x = body.sprite.size.x * -1
+        }
       } else if (body.key === BodyType.body) {
         body.sprite.setTile("body");
       }
