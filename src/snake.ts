@@ -13,13 +13,6 @@ enum BodyType {
   tail = "tail",
 }
 
-enum Direction {
-  up,
-  down,
-  left,
-  right,
-}
-
 type SnakeBodyType = {
   position: Vec2;
   direction: Vec2;
