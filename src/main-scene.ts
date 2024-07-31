@@ -45,6 +45,35 @@ export class MainScene extends Palco2D.Scene {
 
     snake.spawnSnakeAt(Math.floor(rows / 2), Math.floor(cols / 2));
 
+    let currentDirection = { x: 0, y: -1 };
+    document.addEventListener("keydown", (event) => {
+      switch (event.key) {
+        case "ArrowUp":
+          if (currentDirection.y === 1) return;
+          currentDirection = { x: 0, y: -1 };
+          snake.updateSnakePosition({ x: 0, y: -1 }, 0);
+          break;
+        case "ArrowDown":
+          if (currentDirection.y === -1) return;
+          currentDirection = { x: 0, y: 1 };
+          snake.updateSnakePosition({ x: 0, y: 1 }, 0);
+          break;
+        case "ArrowLeft":
+          if (currentDirection.x === 1) return
+          currentDirection = { x: -1, y: 0 };
+          snake.updateSnakePosition({ x: -1, y: 0 }, 0);
+          break;
+        case "ArrowRight":
+          if (currentDirection.x === -1) return;
+          currentDirection = { x: 1, y: 0 };
+          snake.updateSnakePosition({ x: 1, y: 0 }, 0);
+          break;
+        case "a":
+          snake.eatFood = true;
+          break;
+      }
+    });
+
     this.render.addEntity(snake);
     this.render.addEntity(floor);
     this.render.startRender();

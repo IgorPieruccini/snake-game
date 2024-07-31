@@ -35,7 +35,10 @@ export class Snake extends Palco2D.BaseEntity {
   cellSize: number;
   snakeBody: Array<SnakeBodyType> = [];
   private willEatFood: boolean = false;
-  private currentDirection: Vec2 = { x: 0, y: -1 };
+
+  set eatFood(value: boolean) {
+    this.willEatFood = value;
+  }
 
   constructor(props: Props) {
     super(props);
@@ -43,38 +46,6 @@ export class Snake extends Palco2D.BaseEntity {
     this.tileMap = props.tileMap;
     this.tileSetImage = props.tileSetImage;
     this.cellSize = props.cellSize;
-
-    this.keyBoardEvents();
-  }
-
-  private keyBoardEvents() {
-    document.addEventListener("keydown", (event) => {
-      switch (event.key) {
-        case "ArrowUp":
-          if (this.currentDirection.y === 1) return;
-          this.currentDirection = { x: 0, y: -1 };
-          this.updateSnakePosition({ x: 0, y: -1 }, 0);
-          break;
-        case "ArrowDown":
-          if (this.currentDirection.y === -1) return;
-          this.currentDirection = { x: 0, y: 1 };
-          this.updateSnakePosition({ x: 0, y: 1 }, 0);
-          break;
-        case "ArrowLeft":
-          if (this.currentDirection.x === 1) return
-          this.currentDirection = { x: -1, y: 0 };
-          this.updateSnakePosition({ x: -1, y: 0 }, 0);
-          break;
-        case "ArrowRight":
-          if (this.currentDirection.x === -1) return;
-          this.currentDirection = { x: 1, y: 0 };
-          this.updateSnakePosition({ x: 1, y: 0 }, 0);
-          break;
-        case "a":
-          this.willEatFood = true;
-          break;
-      }
-    });
   }
 
   private addBody(direction: Vec2, position: Vec2) {
@@ -112,7 +83,7 @@ export class Snake extends Palco2D.BaseEntity {
   }
 
 
-  private updateSnakePosition(direction: Vec2, index: number, oldPrevDirection?: Vec2) {
+  public updateSnakePosition(direction: Vec2, index: number, oldPrevDirection?: Vec2) {
     const body = this.snakeBody[index];
     if (!body) return;
 
