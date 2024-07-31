@@ -34,6 +34,7 @@ export class Snake extends Palco2D.BaseEntity {
   tileSetImage: HTMLImageElement;
   cellSize: number;
   snakeBody: Array<SnakeBodyType> = [];
+  headPosition: Vec2 = { x: 0, y: 0 };
   private willEatFood: boolean = false;
 
   set eatFood(value: boolean) {
@@ -99,6 +100,10 @@ export class Snake extends Palco2D.BaseEntity {
       this.updateBodySprite(direction, oldPrevDirection, body.key, body.sprite);
     }
 
+    if (body.key === BodyType.head) {
+      this.headPosition = { x: body.position.x, y: body.position.y };
+    }
+
     if (body.key === BodyType.tail) {
       if (oldPrevDirection) {
         body.direction = { x: oldPrevDirection.x, y: oldPrevDirection.y };
@@ -125,6 +130,7 @@ export class Snake extends Palco2D.BaseEntity {
       tileMap: this.tileMap,
       position: { x: this.cellSize * x, y: this.cellSize * y },
       rotation: 0,
+      layer: key === BodyType.head ? 2 : 0,
     });
 
     snakePart.setTile(key);

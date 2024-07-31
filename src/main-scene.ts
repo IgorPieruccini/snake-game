@@ -1,6 +1,7 @@
 import { Palco2D } from "palco-2d";
 import { Floor } from "./floor";
 import { Snake } from "./snake";
+import { Vec2 } from "palco-2d/types";
 
 export class MainScene extends Palco2D.Scene {
 
@@ -51,28 +52,45 @@ export class MainScene extends Palco2D.Scene {
         case "ArrowUp":
           if (currentDirection.y === 1) return;
           currentDirection = { x: 0, y: -1 };
-          snake.updateSnakePosition({ x: 0, y: -1 }, 0);
           break;
         case "ArrowDown":
           if (currentDirection.y === -1) return;
           currentDirection = { x: 0, y: 1 };
-          snake.updateSnakePosition({ x: 0, y: 1 }, 0);
           break;
         case "ArrowLeft":
           if (currentDirection.x === 1) return
           currentDirection = { x: -1, y: 0 };
-          snake.updateSnakePosition({ x: -1, y: 0 }, 0);
           break;
         case "ArrowRight":
           if (currentDirection.x === -1) return;
           currentDirection = { x: 1, y: 0 };
-          snake.updateSnakePosition({ x: 1, y: 0 }, 0);
           break;
         case "a":
           snake.eatFood = true;
           break;
       }
     });
+
+    const checkCollision = () => {
+      const position: Vec2 = {
+        x: snake.headPosition.x + currentDirection.x,
+        y: snake.headPosition.y + currentDirection.y
+      };
+      const isCollidingWithBody = snake.snakeBody.some((body) => {
+        return body.position.x === position.x && body.position.y === position.y;
+      });
+
+      return isCollidingWithBody;
+    }
+
+    const interval = setInterval(() => {
+      const isColliding = checkCollision();
+      if (isColliding) {
+        alert("Game Over");
+        clearInterval(interval);
+      }
+      snake.updateSnakePosition(currentDirection, 0);
+    }, 250);
 
     this.render.addEntity(snake);
     this.render.addEntity(floor);
