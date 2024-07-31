@@ -8,7 +8,7 @@ const __dirname = url.fileURLToPath(import.meta.url);
 export default {
   mode: "development",
   entry: "./src/index.ts",
-  devtool: "inline-source-map",
+  devtool: "eval-source-map",
   module: {
     rules: [
       {
