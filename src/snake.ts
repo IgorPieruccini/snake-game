@@ -34,7 +34,8 @@ export class Snake extends Palco2D.BaseEntity {
   tileSetImage: HTMLImageElement;
   cellSize: number;
   snakeBody: Array<SnakeBodyType> = [];
-  willEatFood: boolean = false;
+  private willEatFood: boolean = false;
+  private currentDirection: Vec2 = { x: 0, y: -1 };
 
   constructor(props: Props) {
     super(props);
@@ -50,15 +51,23 @@ export class Snake extends Palco2D.BaseEntity {
     document.addEventListener("keydown", (event) => {
       switch (event.key) {
         case "ArrowUp":
+          if (this.currentDirection.y === 1) return;
+          this.currentDirection = { x: 0, y: -1 };
           this.updateSnakePosition({ x: 0, y: -1 }, 0);
           break;
         case "ArrowDown":
+          if (this.currentDirection.y === -1) return;
+          this.currentDirection = { x: 0, y: 1 };
           this.updateSnakePosition({ x: 0, y: 1 }, 0);
           break;
         case "ArrowLeft":
+          if (this.currentDirection.x === 1) return
+          this.currentDirection = { x: -1, y: 0 };
           this.updateSnakePosition({ x: -1, y: 0 }, 0);
           break;
         case "ArrowRight":
+          if (this.currentDirection.x === -1) return;
+          this.currentDirection = { x: 1, y: 0 };
           this.updateSnakePosition({ x: 1, y: 0 }, 0);
           break;
         case "a":
