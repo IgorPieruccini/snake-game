@@ -96,6 +96,14 @@ export class Snake extends Palco2D.BaseEntity {
       }
     }
 
+
+    if (body.key === BodyType.tail) {
+      if (oldPrevDirection) {
+        body.direction = { x: oldPrevDirection.x, y: oldPrevDirection.y };
+        body.sprite.rotation = getRotationDirection(oldPrevDirection);
+      }
+    }
+
     this.updateSnakePosition(oldDirection, index + 1, direction);
   }
 
