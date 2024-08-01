@@ -11,8 +11,8 @@ export class MainScene extends Palco2D.Scene {
     const snakeImage = await Palco2D.AssetHandler().loadPng("snake", "assets/snake-tileset.png");
     const snakeTimeMap = await Palco2D.AssetHandler().loadTileMap("snake-tilemap", "assets/snake-tilemap.json");
 
-    const rows = 10;
-    const cols = 10;
+    const rows = 24;
+    const cols = 30;
     const tileSize = 16;
 
     const foorWidth = cols * tileSize;
