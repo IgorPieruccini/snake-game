@@ -35,6 +35,7 @@ export class Snake extends Palco2D.BaseEntity {
   cellSize: number;
   snakeBody: Array<SnakeBodyType> = [];
   headPosition: Vec2 = { x: 0, y: 0 };
+  headDirection: Vec2 = { x: 0, y: -1 };
   private willEatFood: boolean = false;
 
   set eatFood(value: boolean) {
@@ -102,6 +103,7 @@ export class Snake extends Palco2D.BaseEntity {
 
     if (body.key === BodyType.head) {
       this.headPosition = { x: body.position.x, y: body.position.y };
+      this.headDirection = { x: direction.x, y: direction.y };
     }
 
     if (body.key === BodyType.tail) {

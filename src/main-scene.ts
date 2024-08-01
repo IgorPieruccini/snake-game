@@ -50,19 +50,19 @@ export class MainScene extends Palco2D.Scene {
     document.addEventListener("keydown", (event) => {
       switch (event.key) {
         case "ArrowUp":
-          if (currentDirection.y === 1) return;
+          if (snake.headDirection.y === 1) return;
           currentDirection = { x: 0, y: -1 };
           break;
         case "ArrowDown":
-          if (currentDirection.y === -1) return;
+          if (snake.headDirection.y === -1) return;
           currentDirection = { x: 0, y: 1 };
           break;
         case "ArrowLeft":
-          if (currentDirection.x === 1) return
+          if (snake.headDirection.x === 1) return
           currentDirection = { x: -1, y: 0 };
           break;
         case "ArrowRight":
-          if (currentDirection.x === -1) return;
+          if (snake.headDirection.x === -1) return;
           currentDirection = { x: 1, y: 0 };
           break;
         case "a":
@@ -76,7 +76,6 @@ export class MainScene extends Palco2D.Scene {
         x: snake.headPosition.x + currentDirection.x,
         y: snake.headPosition.y + currentDirection.y
       };
-
 
       if (position.x <= 0 || position.x >= cols || position.y <= 0 || position.y >= rows) {
         return true;
