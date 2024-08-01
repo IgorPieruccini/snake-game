@@ -76,6 +76,12 @@ export class MainScene extends Palco2D.Scene {
         x: snake.headPosition.x + currentDirection.x,
         y: snake.headPosition.y + currentDirection.y
       };
+
+
+      if (position.x <= 0 || position.x >= cols || position.y <= 0 || position.y >= rows) {
+        return true;
+      }
+
       const isCollidingWithBody = snake.snakeBody.some((body) => {
         return body.position.x === position.x && body.position.y === position.y;
       });

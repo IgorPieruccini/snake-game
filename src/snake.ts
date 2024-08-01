@@ -130,7 +130,7 @@ export class Snake extends Palco2D.BaseEntity {
       tileMap: this.tileMap,
       position: { x: this.cellSize * x, y: this.cellSize * y },
       rotation: 0,
-      layer: key === BodyType.head ? 2 : 0,
+      layer: key === BodyType.head ? 1 : 0,
     });
 
     snakePart.setTile(key);
@@ -151,6 +151,7 @@ export class Snake extends Palco2D.BaseEntity {
     */
   public spawnSnakeAt(x: number, y: number) {
     const head = this.createSnakePart(x, y, BodyType.head);
+    this.headPosition = { x: head.position.x, y: head.position.y };
     const body = this.createSnakePart(x, y + 1, BodyType.body);
     const tail = this.createSnakePart(x, y + 2, BodyType.tail);
     this.snakeBody = [head, body, tail];
