@@ -2,6 +2,7 @@ import { Palco2D } from "palco-2d";
 import { Floor } from "./floor";
 import { Snake } from "./snake";
 import { Vec2 } from "palco-2d/types";
+import { SpawnFood } from "./spawn-food";
 
 export class MainScene extends Palco2D.Scene {
 
@@ -45,6 +46,16 @@ export class MainScene extends Palco2D.Scene {
     });
 
     snake.spawnSnakeAt(Math.floor(rows / 2), Math.floor(cols / 2));
+
+    const spawnFood = new SpawnFood({
+      tileMap: snakeTimeMap,
+      tileSetImage: snakeImage,
+      tileSize,
+      rows,
+      cols
+    });
+
+    floor.addChild(spawnFood.food);
 
     let currentDirection = { x: 0, y: -1 };
     document.addEventListener("keydown", (event) => {
@@ -95,6 +106,7 @@ export class MainScene extends Palco2D.Scene {
         clearInterval(interval);
       }
       snake.updateSnakePosition(currentDirection, 0);
+      spawnFood.updateFoodTimer();
     }, 250);
 
     this.render.addEntity(snake);
