@@ -1,6 +1,8 @@
 import { Palco2D } from "palco-2d";
 import { Sprite } from "palco-2d/src/core/Sprite";
 import { TileMapType, Vec2 } from "palco-2d/types";
+import { SnakeBodyType } from "./types";
+import { createSections } from "./utils";
 
 interface SpawnFoodProps {
   tileMap: TileMapType;
@@ -33,7 +35,29 @@ export class SpawnFood {
     return this.foodSprite;
   }
 
-  private getSpawnPosition() {
+  private getEmptySpaceInSection(sectionRow: number, sectionCol: number) {
+
+  }
+
+  private getSpawnPosition(snake: SnakeBodyType[]) {
+    // Divide the floor into sections 3x3
+    const section = createSections(this.rows, this.cols);
+    // Select the section further away from the head snake   
+    const headPosition = snake[0].position;
+    if (!headPosition) {
+      throw new Error("Head position is not defined");
+    }
+
+    // Randomly select a section
+    const sectionRow = Math.floor(Math.random() * 3);
+    const sectionCol = Math.floor(Math.random() * 3);
+
+    // Get the empty space in the section
+    // const emptySpace = this.getEmptySpaceInSection(sectionRow, sectionCol);
+
+    // row 1, 2, 3
+    // col 1, 2, 3
+
     const x = Math.floor(Math.random() * this.cols);
     const y = Math.floor(Math.random() * this.rows);
 
@@ -54,15 +78,15 @@ export class SpawnFood {
     return food;
   }
 
-  private spawnFood() {
-    const position = this.getSpawnPosition();
+  private spawnFood(snake: SnakeBodyType[]) {
+    const position = this.getSpawnPosition(snake);
     this.foodSprite.position = position;
   }
 
-  public updateFoodTimer() {
+  public updateFoodTimer(snake: SnakeBodyType[]) {
     this.foodTimer += 1;
     if (this.foodTimer === this.spawnFoodTimer) {
-      this.spawnFood();
+      this.spawnFood(snake);
       this.foodTimer = 0;
     }
   }

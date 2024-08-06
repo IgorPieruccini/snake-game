@@ -1,6 +1,7 @@
 import { Palco2D } from "palco-2d";
 import { Sprite } from "palco-2d/src/core/Sprite";
 import { BaseEntityProps, TileMapType, Vec2 } from "palco-2d/types";
+import { BodyType, SnakeBodyType } from "./types";
 
 type Props = BaseEntityProps & {
   tileMap: TileMapType;
@@ -8,18 +9,6 @@ type Props = BaseEntityProps & {
   cellSize: number;
 };
 
-enum BodyType {
-  head = "head",
-  body = "body",
-  tail = "tail",
-}
-
-type SnakeBodyType = {
-  position: Vec2;
-  direction: Vec2;
-  key: BodyType;
-  sprite: InstanceType<typeof Palco2D.Sprite>;
-};
 
 function getRotationDirection(direction: Vec2) {
   if (direction.x === 0 && direction.y === -1) return 0;
