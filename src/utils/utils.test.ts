@@ -1,7 +1,8 @@
 import { Palco2D } from "palco-2d";
 import { BodyType, SnakeBodyType } from "../types";
-import { IsSectionAvailable, getRandomSection } from "./utils";
+import { getAvailablePositionsInSector, getRandomSection } from "./utils";
 import { Sprite } from "palco-2d/src/core/Sprite";
+import { Vec2 } from "palco-2d/types";
 
 describe('Utils', () => {
 
@@ -35,44 +36,36 @@ describe('Utils', () => {
     expect(result).toEqual({ x: 1, y: 1 });
   });
 
-  describe("is section available", () => {
-    it("Should return true since the snake is not on every spot of the section", () => {
-      const sprite = new Palco2D.BaseEntity({
-        position: { x: 0, y: 0 },
-        size: { x: 0, y: 0 },
-        rotation: 0,
-      }) as Sprite;
+  it("Should return the positions available in a section", () => {
+    const snakeBody: Vec2[] = [
+      //section 0,0
+      { x: 0, y: 0 },
+      { x: 0, y: 1 },
+      { x: 0, y: 2 },
+      { x: 1, y: 2 },
+      { x: 1, y: 1 },
+      { x: 1, y: 0 },
+      { x: 2, y: 0 },
+      { x: 2, y: 1 },
+      { x: 2, y: 2 },
+      //section 1,0
+      { x: 3, y: 0 },
+      { x: 3, y: 1 },
+      { x: 3, y: 2 },
+      { x: 4, y: 2 },
+      { x: 4, y: 1 },
+      { x: 4, y: 0 },
+      { x: 5, y: 0 },
+    ];
 
-      const snakeBody: SnakeBodyType[] = [
-        //section 0,0
-        { position: { x: 0, y: 0 }, direction: { x: 0, y: 0 }, key: BodyType.head, sprite },
-        { position: { x: 0, y: 1 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
-        { position: { x: 0, y: 2 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
-        { position: { x: 1, y: 2 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
-        { position: { x: 1, y: 1 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
-        { position: { x: 1, y: 0 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
-        { position: { x: 2, y: 0 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
-        { position: { x: 2, y: 1 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
-        { position: { x: 2, y: 2 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
-        //section 1,0
-        { position: { x: 3, y: 0 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
-        { position: { x: 3, y: 1 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
-        { position: { x: 3, y: 2 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
-        { position: { x: 4, y: 2 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
-        { position: { x: 4, y: 1 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
-        { position: { x: 4, y: 0 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
-        { position: { x: 5, y: 0 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
-      ];
+    let result = getAvailablePositionsInSector(snakeBody, { x: 0, y: 0 }, 9, 9, 3);
+    expect(result).toEqual([]);
 
-      let result = IsSectionAvailable(snakeBody, { x: 0, y: 0 }, 9, 9, 3);
-      expect(result).toEqual([]);
-
-      result = IsSectionAvailable(snakeBody, { x: 1, y: 0 }, 9, 9, 3);
-      expect(result).toEqual([
-        { x: 5, y: 1 },
-        { x: 5, y: 2 },
-      ]);
-    });
+    result = getAvailablePositionsInSector(snakeBody, { x: 1, y: 0 }, 9, 9, 3);
+    expect(result).toEqual([
+      { x: 5, y: 1 },
+      { x: 5, y: 2 },
+    ]);
   });
 
 })

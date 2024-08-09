@@ -1,7 +1,6 @@
 import { Vec2 } from "palco-2d/types";
-import { SnakeBodyType } from "../types";
 
-export const IsSectionAvailable = (snakeBody: SnakeBodyType[], sections: Vec2, rows: number, cols: number, division: number) => {
+export const getAvailablePositionsInSector = (objectsPos: Array<Vec2>, sections: Vec2, rows: number, cols: number, division: number) => {
   const sectionXSize = rows / division;
   const sectionYSize = cols / division;
 
@@ -12,7 +11,7 @@ export const IsSectionAvailable = (snakeBody: SnakeBodyType[], sections: Vec2, r
       const positionX = x + (sectionXSize * sections.x);
       const positionY = y + (sectionYSize * sections.y);
 
-      const isFree = !snakeBody.some(({ position }) => position.x === positionX && position.y === positionY);
+      const isFree = !objectsPos.some((position) => position.x === positionX && position.y === positionY);
       if (isFree) availablePositions.push({ x: positionX, y: positionY });
     }
   }
