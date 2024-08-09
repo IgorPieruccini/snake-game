@@ -106,7 +106,7 @@ export class MainScene extends Palco2D.Scene {
         clearInterval(interval);
       }
       snake.updateSnakePosition(currentDirection, 0);
-      spawnFood.updateFoodTimer();
+      spawnFood.updateFoodTimer(snake.snakeBody);
     }, 250);
 
     this.render.addEntity(snake);

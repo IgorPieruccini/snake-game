@@ -36,17 +36,6 @@ describe('Utils', () => {
   });
 
   describe("is section available", () => {
-
-    // beforeAll(() => {
-    //   const windowSpy = jest.spyOn(window, "window", "get");
-    //   // @ts-expect-error - Don't need to mock all properties only the one that is being used
-    //   windowSpy.mockImplementation(() => ({ innerWidth: 800, innerHeight: 600, devicePixelRatio: 1 }));
-    // });
-    //
-    // afterAll(() => {
-    //   jest.restoreAllMocks();
-    // });
-
     it("Should return true since the snake is not on every spot of the section", () => {
       const sprite = new Palco2D.BaseEntity({
         position: { x: 0, y: 0 },
@@ -55,6 +44,7 @@ describe('Utils', () => {
       }) as Sprite;
 
       const snakeBody: SnakeBodyType[] = [
+        //section 0,0
         { position: { x: 0, y: 0 }, direction: { x: 0, y: 0 }, key: BodyType.head, sprite },
         { position: { x: 0, y: 1 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
         { position: { x: 0, y: 2 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
@@ -64,14 +54,25 @@ describe('Utils', () => {
         { position: { x: 2, y: 0 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
         { position: { x: 2, y: 1 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
         { position: { x: 2, y: 2 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
+        //section 1,0
+        { position: { x: 3, y: 0 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
+        { position: { x: 3, y: 1 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
+        { position: { x: 3, y: 2 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
+        { position: { x: 4, y: 2 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
+        { position: { x: 4, y: 1 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
+        { position: { x: 4, y: 0 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
+        { position: { x: 5, y: 0 }, direction: { x: 0, y: 0 }, key: BodyType.body, sprite },
       ];
 
-      const result = IsSectionAvailable(snakeBody, { x: 0, y: 0 }, 9, 9, 3);
-      expect(result).toBeTruthy();
+      let result = IsSectionAvailable(snakeBody, { x: 0, y: 0 }, 9, 9, 3);
+      expect(result).toEqual([]);
 
+      result = IsSectionAvailable(snakeBody, { x: 1, y: 0 }, 9, 9, 3);
+      expect(result).toEqual([
+        { x: 5, y: 1 },
+        { x: 5, y: 2 },
+      ]);
     });
-
-
   });
 
 })

@@ -5,19 +5,19 @@ export const IsSectionAvailable = (snakeBody: SnakeBodyType[], sections: Vec2, r
   const sectionXSize = rows / division;
   const sectionYSize = cols / division;
 
+  const availablePositions: Vec2[] = [];
+
   for (let x = 0; x < sectionXSize; x++) {
     for (let y = 0; y < sectionYSize; y++) {
       const positionX = x + (sectionXSize * sections.x);
       const positionY = y + (sectionYSize * sections.y);
-      console.log({ positionX, positionY });
 
-      const isFree = snakeBody.find(({ position }) => position.x === positionX && position.y === positionY);
-      console.log({ isFree });
-      if (isFree) return true;
+      const isFree = !snakeBody.some(({ position }) => position.x === positionX && position.y === positionY);
+      if (isFree) availablePositions.push({ x: positionX, y: positionY });
     }
   }
 
-  return false;
+  return availablePositions;
 }
 
 export const getRandomSection = (snakeSection: Vec2, division: number) => {
@@ -39,7 +39,7 @@ export const getRandomSection = (snakeSection: Vec2, division: number) => {
   };
 }
 
-export const snakeReadSection = (snakeHeadPosition: Vec2, division: number) => {
+export const snakeHeadSection = (snakeHeadPosition: Vec2, division: number) => {
   return {
     x: Math.ceil(snakeHeadPosition.x / division),
     y: Math.ceil(snakeHeadPosition.y / division)

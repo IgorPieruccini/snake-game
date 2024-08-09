@@ -35,10 +35,6 @@ export class SpawnFood {
     return this.foodSprite;
   }
 
-  private getEmptySpaceInSection(sectionRow: number, sectionCol: number) {
-
-  }
-
   private getSpawnPosition(snake: SnakeBodyType[]) {
     // Divide the floor into sections 3x3
     const section = createSections(this.rows, this.cols);
