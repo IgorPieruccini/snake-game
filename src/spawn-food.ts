@@ -2,7 +2,7 @@ import { Palco2D } from "palco-2d";
 import { Sprite } from "palco-2d/src/core/Sprite";
 import { TileMapType, Vec2 } from "palco-2d/types";
 import { SnakeBodyType } from "./types";
-import { createSections } from "./utils";
+import { createSections, getAvailablePositionsInSector, getRandomSection, getSnakeHeadSection } from "./utils";
 
 interface SpawnFoodProps {
   tileMap: TileMapType;
@@ -18,7 +18,8 @@ export class SpawnFood {
   rows: number;
   cols: number;
   foodTimer: number = 0;
-  spawnFoodTimer: number = 3;
+  spawnFoodTimer: number = 10;
+  division: number = 4;
   tileSize: number;
   private foodSprite: Sprite;
 
@@ -36,28 +37,26 @@ export class SpawnFood {
   }
 
   private getSpawnPosition(snake: SnakeBodyType[]) {
-    // Divide the floor into sections 3x3
-    const section = createSections(this.rows, this.cols);
-    // Select the section further away from the head snake   
-    const headPosition = snake[0].position;
-    if (!headPosition) {
-      throw new Error("Head position is not defined");
-    }
+    const headSection = getSnakeHeadSection(snake[0].position, this.division);
+    console.log({ headSection });
+    const randomSection = getRandomSection(headSection, this.division);
+    console.log({ randomSection });
 
-    // Randomly select a section
-    const sectionRow = Math.floor(Math.random() * 3);
-    const sectionCol = Math.floor(Math.random() * 3);
+    const availablePositionInSector = getAvailablePositionsInSector(
+      snake.map((body) => body.position),
+      randomSection,
+      this.rows,
+      this.cols,
+      this.division
+    );
+    console.log({ availablePositionInSector });
 
-    // Get the empty space in the section
-    // const emptySpace = this.getEmptySpaceInSection(sectionRow, sectionCol);
+    const randomAvailablePosition = availablePositionInSector[Math.floor(Math.random() * availablePositionInSector.length)];
 
-    // row 1, 2, 3
-    // col 1, 2, 3
-
-    const x = Math.floor(Math.random() * this.cols);
-    const y = Math.floor(Math.random() * this.rows);
-
-    return { x: this.tileSize * x, y: this.tileSize * y };
+    return {
+      x: randomAvailablePosition.x * this.tileSize,
+      y: randomAvailablePosition.y * this.tileSize,
+    };
   }
 
   private createFood(position: Vec2) {

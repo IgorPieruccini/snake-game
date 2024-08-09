@@ -38,7 +38,7 @@ export const getRandomSection = (snakeSection: Vec2, division: number) => {
   };
 }
 
-export const snakeHeadSection = (snakeHeadPosition: Vec2, division: number) => {
+export const getSnakeHeadSection = (snakeHeadPosition: Vec2, division: number) => {
   return {
     x: Math.ceil(snakeHeadPosition.x / division),
     y: Math.ceil(snakeHeadPosition.y / division)
