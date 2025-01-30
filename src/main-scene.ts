@@ -5,12 +5,19 @@ import { Vec2 } from "palco-2d/types";
 import { SpawnFood } from "./spawn-food";
 
 export class MainScene extends Palco2D.Scene {
-
   async start() {
-    const tileSetImage = await Palco2D.AssetHandler().loadPng("tileset", "assets/dungeon-tileset.png");
-    const tileMap = await Palco2D.AssetHandler().loadTileMap("tilemap", "assets/tile-map.json");
-    const snakeImage = await Palco2D.AssetHandler().loadPng("snake", "assets/snake-tileset.png");
-    const snakeTimeMap = await Palco2D.AssetHandler().loadTileMap("snake-tilemap", "assets/snake-tilemap.json");
+    const tileSetImage = await Palco2D.AssetHandler().loadPng(
+      "assets/dungeon-tileset.png",
+    );
+    const tileMap = await Palco2D.AssetHandler().loadTileMap(
+      "assets/tile-map.json",
+    );
+    const snakeImage = await Palco2D.AssetHandler().loadPng(
+      "assets/snake-tileset.png",
+    );
+    const snakeTimeMap = await Palco2D.AssetHandler().loadTileMap(
+      "assets/snake-tilemap.json",
+    );
 
     const rows = 24;
     const cols = 30;
@@ -21,7 +28,7 @@ export class MainScene extends Palco2D.Scene {
 
     const position = {
       x: this.canvas.clientWidth / 2 - foorWidth / 2,
-      y: this.canvas.clientHeight / 2 - floorHeight / 2
+      y: this.canvas.clientHeight / 2 - floorHeight / 2,
     };
 
     const floor = new Floor({
@@ -32,7 +39,7 @@ export class MainScene extends Palco2D.Scene {
       size: { x: 1, y: 1 },
       tileSize,
       rows,
-      cols
+      cols,
     });
 
     const snake = new Snake({
@@ -42,17 +49,15 @@ export class MainScene extends Palco2D.Scene {
       tileMap: snakeTimeMap,
       tileSetImage: snakeImage,
       cellSize: tileSize,
-      layer: 1
+      layer: 1,
     });
 
     snake.spawnSnakeAt(Math.floor(rows / 2), Math.floor(cols / 2));
 
     const spawnFood = new SpawnFood({
-      tileMap: snakeTimeMap,
-      tileSetImage: snakeImage,
       tileSize,
       rows,
-      cols
+      cols,
     });
 
     floor.addChild(spawnFood.food);
@@ -69,7 +74,7 @@ export class MainScene extends Palco2D.Scene {
           currentDirection = { x: 0, y: 1 };
           break;
         case "ArrowLeft":
-          if (snake.headDirection.x === 1) return
+          if (snake.headDirection.x === 1) return;
           currentDirection = { x: -1, y: 0 };
           break;
         case "ArrowRight":
@@ -85,10 +90,15 @@ export class MainScene extends Palco2D.Scene {
     const checkCollision = () => {
       const position: Vec2 = {
         x: snake.headPosition.x + currentDirection.x,
-        y: snake.headPosition.y + currentDirection.y
+        y: snake.headPosition.y + currentDirection.y,
       };
 
-      if (position.x <= 0 || position.x >= cols || position.y <= 0 || position.y >= rows) {
+      if (
+        position.x <= 0 ||
+        position.x >= cols ||
+        position.y <= 0 ||
+        position.y >= rows
+      ) {
         return true;
       }
 
@@ -97,7 +107,7 @@ export class MainScene extends Palco2D.Scene {
       });
 
       return isCollidingWithBody;
-    }
+    };
 
     const interval = setInterval(() => {
       const isColliding = checkCollision();
@@ -113,5 +123,4 @@ export class MainScene extends Palco2D.Scene {
     this.render.addEntity(floor);
     this.render.startRender();
   }
-
 }

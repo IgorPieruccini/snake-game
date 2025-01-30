@@ -58,14 +58,20 @@ export class Snake extends Palco2D.BaseEntity {
     this.snakeBody = [
       ...this.snakeBody.slice(0, 1),
       body,
-      ...this.snakeBody.slice(1)
+      ...this.snakeBody.slice(1),
     ];
 
     return body;
   }
 
-  private updateBodySprite(direction: Vec2, prevDirection: Vec2, key: string, sprite: Sprite) {
-    const differentDirection = prevDirection.x !== direction.x || prevDirection.y !== direction.y;
+  private updateBodySprite(
+    direction: Vec2,
+    prevDirection: Vec2,
+    key: string,
+    sprite: Sprite,
+  ) {
+    const differentDirection =
+      prevDirection.x !== direction.x || prevDirection.y !== direction.y;
 
     if (differentDirection && key === BodyType.body) {
       sprite.setTile("body-turn");
@@ -75,27 +81,36 @@ export class Snake extends Palco2D.BaseEntity {
         (prevDirection.x === -1 && direction.y === -1) ||
         (prevDirection.y === -1 && direction.x === 1)
       ) {
-        sprite.size.x = Math.abs(sprite.size.x)
+        sprite.size.x = Math.abs(sprite.size.x);
       } else {
-        sprite.size.x = sprite.size.x * -1
+        sprite.size.x = sprite.size.x * -1;
       }
     } else if (key === BodyType.body) {
       sprite.setTile("body");
     }
   }
 
-
-  public updateSnakePosition(direction: Vec2, index: number, oldPrevDirection?: Vec2) {
+  public updateSnakePosition(
+    direction: Vec2,
+    index: number,
+    oldPrevDirection?: Vec2,
+  ) {
     const body = this.snakeBody[index];
     if (!body) return;
 
     const oldDirection = { x: body.direction.x, y: body.direction.y };
     const oldPosition = { x: body.position.x, y: body.position.y };
 
-    body.position = { x: body.position.x + direction.x, y: body.position.y + direction.y };
+    body.position = {
+      x: body.position.x + direction.x,
+      y: body.position.y + direction.y,
+    };
     body.direction = direction;
     body.sprite.rotation = getRotationDirection(direction);
-    body.sprite.position = { x: body.position.x * this.cellSize, y: body.position.y * this.cellSize };
+    body.sprite.position = {
+      x: body.position.x * this.cellSize,
+      y: body.position.y * this.cellSize,
+    };
 
     if (oldPrevDirection) {
       this.updateBodySprite(direction, oldPrevDirection, body.key, body.sprite);
@@ -116,7 +131,12 @@ export class Snake extends Palco2D.BaseEntity {
     if (body.key === BodyType.head && this.willEatFood) {
       const body = this.addBody(oldDirection, oldPosition);
       this.willEatFood = false;
-      this.updateBodySprite(oldDirection, direction, BodyType.body, body.sprite);
+      this.updateBodySprite(
+        oldDirection,
+        direction,
+        BodyType.body,
+        body.sprite,
+      );
       return;
     }
 
@@ -124,12 +144,12 @@ export class Snake extends Palco2D.BaseEntity {
   }
 
   /**
-    * Create the sprite and objects for the snake part and push it to the snakeBody array
-    */
+   * Create the sprite and objects for the snake part and push it to the snakeBody array
+   */
   private createSnakePart(x: number, y: number, key: BodyType) {
     const snakePart = new Palco2D.Sprite({
-      texture: this.tileSetImage,
-      tileMap: this.tileMap,
+      texture: "assets/snake-tileset.png",
+      tileMap: "assets/snake-tilemap.json",
       position: { x: this.cellSize * x, y: this.cellSize * y },
       rotation: 0,
       layer: key === BodyType.head ? 1 : 0,
@@ -142,15 +162,15 @@ export class Snake extends Palco2D.BaseEntity {
       position: { x, y },
       key,
       sprite: snakePart,
-    }
+    };
 
     this.addChild(snakePart);
     return body;
   }
 
   /**
-    * Spawn the default/initial snake at the given position
-    */
+   * Spawn the default/initial snake at the given position
+   */
   public spawnSnakeAt(x: number, y: number) {
     const head = this.createSnakePart(x, y, BodyType.head);
     this.headPosition = { x: head.position.x, y: head.position.y };

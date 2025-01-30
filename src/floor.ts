@@ -15,7 +15,7 @@ export class Floor extends Palco2D.BaseEntity {
   tileSetImage: HTMLImageElement;
   tileSize: number;
   rows: number;
-  cols: number
+  cols: number;
   private tiles: Array<Sprite> = [];
 
   constructor(props: Props) {
@@ -30,8 +30,8 @@ export class Floor extends Palco2D.BaseEntity {
 
   createFloorTile(x: number, y: number, key: string) {
     const floorTile = new Palco2D.Sprite({
-      texture: this.tileSetImage,
-      tileMap: this.tileMap,
+      texture: "assets/dungeon-tileset.png",
+      tileMap: "assets/tile-map.json",
       position: { x, y },
       rotation: 0,
       static: true,
@@ -45,7 +45,9 @@ export class Floor extends Palco2D.BaseEntity {
     this.tiles.push(this.createFloorTile(0, 0, "1"));
     for (let i = 1; i < x; i++) {
       const random = Math.floor(Math.random() * 4) + 2;
-      this.tiles.push(this.createFloorTile(i * this.tileSize, 0, random.toString()));
+      this.tiles.push(
+        this.createFloorTile(i * this.tileSize, 0, random.toString()),
+      );
     }
 
     this.tiles.push(this.createFloorTile(x * this.tileSize, 0, "6"));
@@ -58,20 +60,35 @@ export class Floor extends Palco2D.BaseEntity {
       const randomY = Math.floor(Math.random() * 3);
       const randomX = Math.floor(Math.random() * 2) + 7;
       const randomResult = randomX + randomY;
-      this.tiles.push(this.createFloorTile(i * this.tileSize, y * this.tileSize, randomResult.toString()));
+      this.tiles.push(
+        this.createFloorTile(
+          i * this.tileSize,
+          y * this.tileSize,
+          randomResult.toString(),
+        ),
+      );
     }
 
-    this.tiles.push(this.createFloorTile(x * this.tileSize, y * this.tileSize, "6"));
+    this.tiles.push(
+      this.createFloorTile(x * this.tileSize, y * this.tileSize, "6"),
+    );
   }
 
   createBottom(x: number, y: number) {
     this.tiles.push(this.createFloorTile(0, y * this.tileSize, "41"));
     for (let i = 1; i < x; i++) {
       const random = Math.floor(Math.random() * 4) + 42;
-      this.tiles.push(this.createFloorTile(i * this.tileSize, y * this.tileSize, random.toString()));
+      this.tiles.push(
+        this.createFloorTile(
+          i * this.tileSize,
+          y * this.tileSize,
+          random.toString(),
+        ),
+      );
     }
-    this.tiles.push(this.createFloorTile(x * this.tileSize, y * this.tileSize, "46"));
-
+    this.tiles.push(
+      this.createFloorTile(x * this.tileSize, y * this.tileSize, "46"),
+    );
   }
 
   init() {
@@ -96,8 +113,4 @@ export class Floor extends Palco2D.BaseEntity {
     floor.render = batchedFloor.draw;
     this.addChild(floor);
   }
-
-
-
-
 }

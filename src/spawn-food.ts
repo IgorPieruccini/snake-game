@@ -3,16 +3,12 @@ import { Sprite } from "palco-2d/src/core/Sprite";
 import { TileMapType, Vec2 } from "palco-2d/types";
 
 interface SpawnFoodProps {
-  tileMap: TileMapType;
-  tileSetImage: HTMLImageElement;
   tileSize: number;
   rows: number;
   cols: number;
 }
 
 export class SpawnFood {
-  tileMap: TileMapType;
-  tileSetImage: HTMLImageElement;
   rows: number;
   cols: number;
   foodTimer: number = 0;
@@ -21,8 +17,6 @@ export class SpawnFood {
   private foodSprite: Sprite;
 
   constructor(props: SpawnFoodProps) {
-    this.tileMap = props.tileMap;
-    this.tileSetImage = props.tileSetImage;
     this.rows = props.rows;
     this.cols = props.cols;
     this.tileSize = props.tileSize;
@@ -43,8 +37,8 @@ export class SpawnFood {
   private createFood(position: Vec2) {
     const food = new Palco2D.Sprite({
       id: "food",
-      texture: this.tileSetImage,
-      tileMap: this.tileMap,
+      texture: "assets/snake-tileset.png",
+      tileMap: "assets/snake-tilemap.json",
       position,
       rotation: 0,
       layer: 1,
